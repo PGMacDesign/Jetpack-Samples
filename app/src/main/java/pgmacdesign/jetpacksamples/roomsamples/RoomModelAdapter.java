@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class RoomModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public static final int TAG_ROOM_MODEL_ADAPTER_CLICK = -121;
     public static final int TAG_ROOM_MODEL_ADAPTER_LONG_CLICK = -122;
+    public static final int TAG_ROOM_MODEL_ADAPTER_X_IV = -123;
 
     //Dataset List
     private List<NotePOJO> mListObjects;
@@ -89,6 +91,12 @@ public class RoomModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     return true;
                 }
             });
+            holder.adapter_room_model_cancel_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    RoomModelAdapter.this.listener.onTaskComplete(note, TAG_ROOM_MODEL_ADAPTER_X_IV);
+                }
+            });
         }
         int size = (MiscUtilities.isListNullOrEmpty(this.mListObjects) ? 0 : this.mListObjects.size());
         if(position < size - 1){
@@ -113,10 +121,12 @@ public class RoomModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private TextView adapter_room_model_tv1, adapter_room_model_tv2, adapter_room_model_tv3;
         private RelativeLayout adapter_room_model_root;
+        private ImageView adapter_room_model_cancel_iv;
         private View separator;
 
         public RoomHolder(View itemView) {
             super(itemView);
+            this.adapter_room_model_cancel_iv = itemView.findViewById(R.id.adapter_room_model_cancel_iv);
             this.adapter_room_model_root = itemView.findViewById(R.id.adapter_room_model_root);
             this.adapter_room_model_tv1 = itemView.findViewById(R.id.adapter_room_model_tv1);
             this.adapter_room_model_tv2 = itemView.findViewById(R.id.adapter_room_model_tv2);

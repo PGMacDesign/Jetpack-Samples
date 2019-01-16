@@ -6,6 +6,8 @@
     android:foreground="@drawable/selectable_item_foreground"
     >
 
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +16,7 @@
         android:padding="2dp"
         android:textSize="12sp"
         android:clickable="false"
+        android:layout_toStartOf="@+id/adapter_room_model_cancel_iv"
         />
 
     <TextView
@@ -25,6 +28,7 @@
         android:padding="2dp"
         android:textSize="15sp"
         android:clickable="false"
+        android:layout_toStartOf="@+id/adapter_room_model_cancel_iv"
         />
 
     <TextView
@@ -36,6 +40,7 @@
         android:padding="2dp"
         android:textSize="14sp"
         android:clickable="false"
+        android:layout_toStartOf="@+id/adapter_room_model_cancel_iv"
         />
 
     <View
@@ -44,5 +49,15 @@
         android:layout_below="@+id/adapter_room_model_tv3"
         android:background="@color/black"
         android:id="@+id/separator"
+        />
+
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@mipmap/edit_pencil"
+        android:id="@+id/adapter_room_model_cancel_iv"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="4dp"
         />
 </RelativeLayout>

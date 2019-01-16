@@ -4,11 +4,14 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 /**
- * Note DAO Interface
+ * Note DAO Interface. Reference docs here:
+ * https://developer.android.com/reference/android/arch/persistence/room/Query
  */
 @Dao
 public interface NoteDao {
@@ -22,29 +25,23 @@ public interface NoteDao {
 
     //region Read
     @Query("SELECT * FROM notes WHERE id IS :id")
-    LiveData<NotePOJO> readSingle(String id);
+    LiveData<NotePOJO> getNote(String id);
     @Query("SELECT * FROM notes")
     LiveData<List<NotePOJO>> readAll();
     @Query("SELECT * FROM notes WHERE dateAdded IS :dateToCheck")
-    LiveData<List<NotePOJO>> readAllOnDate(String dateToCheck);
+    LiveData<List<NotePOJO>> getAllOnDate(String dateToCheck);
 
     //endregion
 
     //region Update
-//    @Update
-//    LiveData<NotePOJO> update(String id, String noteText);
-//    @Update
-//    LiveData<NotePOJO> update(String id, NotePOJO notePOJO);
-//    @Update
-//    LiveData<NotePOJO> update(NotePOJO notePOJO);
+    @Update
+    void update(NotePOJO notePOJO);
 
     //endregion
 
     //region Delete
-//    @Delete
-//    Integer delete(String id);
-//    @Delete
-//    Integer delete(NotePOJO notePOJO);
+    @Delete
+    Integer delete(NotePOJO notePOJO);
 
     //endregion
 }

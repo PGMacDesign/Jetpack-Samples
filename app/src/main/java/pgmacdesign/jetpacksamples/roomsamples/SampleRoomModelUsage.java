@@ -7,12 +7,14 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.pgmacdesign.pgmactips.adaptersandlisteners.OnTaskCompleteListener;
+import com.pgmacdesign.pgmactips.utilities.DialogUtilities;
 import com.pgmacdesign.pgmactips.utilities.L;
 import com.pgmacdesign.pgmactips.utilities.StringUtilities;
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,6 +34,7 @@ public class SampleRoomModelUsage extends AppCompatActivity implements SwipeRefr
     //Vars
     private RoomModelAdapter roomModelAdapter;
     private OnTaskCompleteListener listener;
+    private EditNoteDialog editNoteDialog;
 
     //View Model
     private NoteViewModel viewModel;
@@ -53,19 +56,49 @@ public class SampleRoomModelUsage extends AppCompatActivity implements SwipeRefr
         this.listener = new OnTaskCompleteListener() {
             @Override
             public void onTaskComplete(Object result, int customTag) {
-                NotePOJO n;
-                if(customTag == RoomModelAdapter.TAG_ROOM_MODEL_ADAPTER_CLICK){
-                    n = (NotePOJO) result;
-                    if(n != null){
-                        L.m("Note (short click) == " + new Gson().toJson(n, NotePOJO.class));
-                    }
+                final NotePOJO n;
+                switch (customTag){
+                    case RoomModelAdapter.TAG_ROOM_MODEL_ADAPTER_CLICK:
+                        n = (NotePOJO) result;
+                        if(n != null){
+                            L.m("Note (short click) == " + new Gson().toJson(n, NotePOJO.class));
+                        }
+                        break;
+
+                    case RoomModelAdapter.TAG_ROOM_MODEL_ADAPTER_LONG_CLICK:
+                        n = (NotePOJO) result;
+                        if(n != null){
+                            L.m("Note (long click) == " + new Gson().toJson(n, NotePOJO.class));
+                            AlertDialog d = DialogUtilities.buildSimpleAlertDialog(
+                                    SampleRoomModelUsage.this, new DialogUtilities.DialogFinishedListener() {
+                                @Override
+                                public void dialogFinished(Object object, int tag) {
+                                    switch (tag){
+                                        case DialogUtilities.YES_RESPONSE:
+                                            SampleRoomModelUsage.this.viewModel.deleteNote(n);
+                                            break;
+
+                                        case DialogUtilities.NO_RESPONSE:
+                                            //Do nothing, they canceled
+                                            break;
+                                    }
+                                }
+                            }, "Delete", "Are you sure you want to delete this note?",
+                                    "Yes, Delete", "No, Cancel");
+                            d.show();
+                        }
+                        break;
+
+                    case RoomModelAdapter.TAG_ROOM_MODEL_ADAPTER_X_IV:
+                        L.m("TAG_ROOM_MODEL_ADAPTER_X_IV");
+                        n = (NotePOJO) result;
+                        if(n != null){
+                            showDialog(n);
+                        }
+                        break;
+
                 }
-                if(customTag == RoomModelAdapter.TAG_ROOM_MODEL_ADAPTER_LONG_CLICK){
-                    n = (NotePOJO) result;
-                    if(n != null){
-                        L.m("Note (long click) == " + new Gson().toJson(n, NotePOJO.class));
-                    }
-                }
+
             }
         };
         this.roomModelAdapter = new RoomModelAdapter(this, listener);
@@ -130,4 +163,41 @@ public class SampleRoomModelUsage extends AppCompatActivity implements SwipeRefr
 
     //endregion
 
+    //region Dialog Methods
+
+    private void showDialog(final NotePOJO notePOJO){
+        L.m("showDialog - 169");
+        if(notePOJO == null){
+            return;
+        }
+        L.m("showDialog - 169");
+        if(this.editNoteDialog != null){
+            this.editNoteDialog.dismiss();
+        }
+        L.m("showDialog - 169");
+        this.editNoteDialog = null;
+        L.m("showDialog - 169");
+        this.editNoteDialog = new EditNoteDialog(this, new DialogUtilities.DialogFinishedListener() {
+            @Override
+            public void dialogFinished(Object object, int tag) {
+                switch (tag){
+                    case DialogUtilities.SUCCESS_RESPONSE:
+                        String str = (String) object;
+                        //Update note here with new data
+                        notePOJO.setNote(str);
+                        SampleRoomModelUsage.this.viewModel.updateNote(notePOJO);
+                        L.toast(SampleRoomModelUsage.this, "Note Updated");
+                        break;
+
+                    case DialogUtilities.FAIL_RESPONSE:
+                        //Means they canceled, ignore
+                        L.toast(SampleRoomModelUsage.this, "Canceled Edit");
+                        break;
+                }
+            }
+        });
+        this.editNoteDialog.show();
+        L.m("showDialog - 169");
+    }
+    //endregion
 }
