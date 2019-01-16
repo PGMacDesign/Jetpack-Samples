@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+    }
+}
+buildscript{
+    repositories {
+        jcenter()
+        mavenCentral()
+        google()
+        maven { url "https://maven.google.com" }
+    }
+}
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "pgmacdesign.jetpacksamples"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                //This is being pulled from: https://stackoverflow.com/a/44424908/2480714 With regards to room schemas
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+
+    //Volley. Link: https://github.com/google/volley
+    implementation 'com.android.volley:volley:1.1.0'
+
+    //GSON. Link https://github.com/google/gson
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    //Picasso. Link: https://github.com/square/picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+
+    //Retrofit, Retrofit Converters, and OKHTTP.
+    //Retrofit - https://github.com/square/retrofit
+    //OKHttp - https://github.com/square/okhttp
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    //Type-safe HTTP client for Android and Java: https://github.com/square/retrofit
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    //OKIO. Link: https://github.com/square/okio
+    implementation 'com.squareup.okio:okio:1.13.0'
+
+    //Animations Base. Link: https://github.com/JakeWharton/NineOldAndroids
+//        implementation 'com.nineoldandroids:library:2.4.0'
+    //Part of The Android Animations collection below. Link: https://github.com/daimajia/AnimationEasingFunctions
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    //Android Animations. Link: https://github.com/daimajia/AndroidViewAnimations
+    implementation 'com.daimajia.androidanimations:library:2.2@aar'
+
+    implementation 'com.android.support:design:28.0.0'
+    //region Android Jetpack
+    //Lifecycle Version
+    def lifecycle_version="2.0.0"
+//        implementation "android.arch.lifecycle:extensions:$lifecycle_version" //For Pre X (1.1.1)
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+//        annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"  //For Pre X (1.1.1)
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+    //Other Various Libs migrating to AndroidX
+    def current_version = "1.0.0"
+    implementation "androidx.appcompat:appcompat:$current_version"
+    implementation "androidx.cardview:cardview:$current_version"
+
+    //Room: https://developer.android.com/topic/libraries/architecture/adding-components#room
+    def room_version = "2.1.0-alpha03"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+//        implementation "androidx.core:core:$current_version"
+
+    //Annotations. Link: https://developer.android.com/topic/libraries/support-library/packages
+    implementation 'com.android.support:support-annotations:28.0.0'//OLD -
+//        implementation "androidx.annotation:annotation:$current_version"
+
+    implementation 'com.android.support:multidex:1.0.1'
+    //endregion
+
+    implementation ('com.github.PGMacDesign:PGMacTips:0.0.74')
+}
